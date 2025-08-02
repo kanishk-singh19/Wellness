@@ -9,7 +9,9 @@ import PublicSessionDiscovery from './pages/public-session-discovery';
 import UserRegistration from './pages/user-registration';
 import PersonalSessionDashboard from './pages/personal-session-dashboard';
 import SessionEditor from './pages/session-editor';
-import PrivateRoute from './utils/PrivateRoute'; // <-- Import PrivateRoute
+import PrivateRoute from "./components/auth/PrivateRoute";
+
+// import PrivateRoute from './utils/PrivateRoute'; // <-- Import PrivateRoute
 
 const Routes = () => {
   return (
