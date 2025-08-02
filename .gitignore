@@ -1,8 +1,16 @@
-.DS_Store
 node_modules
-.idea
-package-lock.json
-/build
+# í±‰ FRONTEND
+/frontend/node_modules/
+/frontend/.env
+/frontend/build/
+/frontend/dist/
+
+# í±‰ BACKEND
+/backend/node_modules/
+/backend/.env
+
+# í±‰ SHARED
+.DS_Store
+*.log
 .vscode/
 .idea/
-vite.config.*s.*
