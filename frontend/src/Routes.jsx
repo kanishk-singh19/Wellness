@@ -11,7 +11,7 @@ import PersonalSessionDashboard from './pages/personal-session-dashboard';
 import SessionEditor from './pages/session-editor';
 // import PrivateRoute from "./components/auth/PrivateRoute";
 
-import PrivateRoute from './utils/PrivateRoute'; 
+import PrivateRoute from './utils/privateRoute'; 
 
 const Routes = () => {
   return (
