@@ -1,5 +1,5 @@
 import express from 'express';
-import Session from '../models/Session.js';
+import Session from '../models/session.js';
 
 const router = express.Router();
 
