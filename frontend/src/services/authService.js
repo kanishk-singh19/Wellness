@@ -1,7 +1,7 @@
 // src/services/authService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
 
 // LOGIN FUNCTION
 export const login = async ({ email, password }) => {
@@ -12,18 +12,21 @@ export const login = async ({ email, password }) => {
 
     const response = await axios.post(`${API_URL}/login`, { email, password });
 
-    // ✅ Store token properly for auth
-    localStorage.setItem('wellnesshubToken', response.data.token);
+    const { token, user } = response.data;
+
+    // ✅ Store token and user locally
+    localStorage.setItem('wellnesshubToken', token);
+    localStorage.setItem('wellnesshubUser', JSON.stringify(user));
 
     return {
       success: true,
-      user: response.data.user,
-      token: response.data.token
+      user,
+      token,
     };
   } catch (err) {
     return {
       success: false,
-      error: err.response?.data?.error || 'Login failed. Please try again.'
+      error: err.response?.data?.error || 'Login failed. Please try again.',
     };
   }
 };
@@ -33,18 +36,27 @@ export const register = async (formData) => {
   try {
     const response = await axios.post(`${API_URL}/register`, formData);
 
-    // ✅ Store token on registration too
-    localStorage.setItem('wellnesshubToken', response.data.token);
+    const { token, user } = response.data;
+
+    // ✅ Store token and user on registration
+    localStorage.setItem('wellnesshubToken', token);
+    localStorage.setItem('wellnesshubUser', JSON.stringify(user));
 
     return {
       success: true,
-      user: response.data.user,
-      token: response.data.token
+      user,
+      token,
     };
   } catch (err) {
     return {
       success: false,
-      error: err.response?.data?.error || 'Registration failed. Please try again.'
+      error: err.response?.data?.error || 'Registration failed. Please try again.',
     };
   }
+};
+
+// LOGOUT FUNCTION (optional)
+export const logout = () => {
+  localStorage.removeItem('wellnesshubToken');
+  localStorage.removeItem('wellnesshubUser');
 };

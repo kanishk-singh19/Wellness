@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api/sessions';
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/sessions`;
 
 const sessionService = {
   async getPublishedSessions() {
     try {
-      const response = await axios.get(`${API_BASE_URL}/published`);
+      const response = await axios.get(`${API_BASE_URL}/public`);
       return { success: true, data: response.data };
     } catch (error) {
       console.error('❌ Error fetching published sessions:', error);
@@ -13,9 +13,13 @@ const sessionService = {
     }
   },
 
-  async getUserSessions(userId) {
+  async getUserSessions(userId, token) {
     try {
-      const response = await axios.get(`${API_BASE_URL}/user/${userId}`);
+      const response = await axios.get(`${API_BASE_URL}/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return { success: true, data: response.data };
     } catch (error) {
       console.error('❌ Error fetching user sessions:', error);
@@ -23,9 +27,13 @@ const sessionService = {
     }
   },
 
-  async createOrUpdateSession(sessionData) {
+  async createOrUpdateSession(sessionData, token) {
     try {
-      const response = await axios.post(`${API_BASE_URL}/create`, sessionData);
+      const response = await axios.post(`${API_BASE_URL}`, sessionData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return { success: true, data: response.data };
     } catch (error) {
       console.error('❌ Error saving session:', error);
@@ -33,14 +41,13 @@ const sessionService = {
     }
   },
 
-  async publishSession(session, userId) {
+  async publishSession(sessionId, token) {
     try {
-      const data = {
-        ...session,
-        status: 'published',
-        userId: userId,
-      };
-      const response = await axios.post(`${API_BASE_URL}/create`, data);
+      const response = await axios.put(`${API_BASE_URL}/${sessionId}/publish`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return { success: true, data: response.data };
     } catch (error) {
       console.error('❌ Error publishing session:', error);
@@ -48,14 +55,13 @@ const sessionService = {
     }
   },
 
-  async saveDraft(session, userId) {
+  async saveDraft(sessionData, token) {
     try {
-      const data = {
-        ...session,
-        status: 'draft',
-        userId: userId,
-      };
-      const response = await axios.post(`${API_BASE_URL}/create`, data);
+      const response = await axios.post(`${API_BASE_URL}`, sessionData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return { success: true, data: response.data };
     } catch (error) {
       console.error('❌ Error saving draft:', error);
@@ -63,9 +69,13 @@ const sessionService = {
     }
   },
 
-  async deleteSession(sessionId) {
+  async deleteSession(sessionId, token) {
     try {
-      const response = await axios.delete(`${API_BASE_URL}/delete/${sessionId}`);
+      const response = await axios.delete(`${API_BASE_URL}/${sessionId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return { success: true, data: response.data };
     } catch (error) {
       console.error('❌ Error deleting session:', error);
@@ -73,12 +83,23 @@ const sessionService = {
     }
   },
 
+  async getSessionById(sessionId) {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/${sessionId}`);
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error('❌ Error fetching session by ID:', error);
+      return { success: false, error: 'Failed to fetch session' };
+    }
+  },
+
   subscribeToUserSessions(userId, callback) {
+    // This is a mock for real-time support, can be expanded in future
     console.warn('📡 subscribeToUserSessions is a mock function.');
     return () => {
       console.warn('📴 Unsubscribed.');
     };
-  }
+  },
 };
 
 export default sessionService;
